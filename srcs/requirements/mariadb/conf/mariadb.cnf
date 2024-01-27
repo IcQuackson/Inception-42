@@ -1,0 +1,24 @@
+# mariadb.cnf
+
+[server]
+
+[mysqld]
+user = mysql
+pid-file = /run/mysqld/mysqld.pid
+socket = /run/mysql/mysqld.socket
+port = 3306
+basedir = /user
+datadir = /var/lib/mysql
+tmpdir = /tmpdir
+lc-messages-dir = /usr/share/mysql
+log_error = /var/log/mysql/error.log
+
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+
+[mysql]
+default-character-set=utf8mb4
+
+[client]
+user=${MYSQL_USER}
+password=${MYSQL_PASSWORD}

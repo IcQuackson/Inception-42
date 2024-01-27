@@ -9,7 +9,7 @@ RUN mkdir -p /etc/nginx/ssl && openssl req -x509 -nodes -days 365 -newkey rsa:20
     -subj "/C=PT/ST=Lisbon/L=Lisbon/O=42 Lisboa/CN=42.fr"
 
 # Copy config file into the container
-COPY ./tools/nginx.conf /etc/nginx/nginx.conf
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 443
 EXPOSE 443

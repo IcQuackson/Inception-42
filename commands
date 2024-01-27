@@ -1,0 +1,8 @@
+sudo docker container prune  #Remove all containers
+sudo docker build -t <image_name> .  #Build image with name <image_name>
+sudo docker run --name <container_name> -d -p 443:443 <image_name>   #Create and run container <container_name> using image <image_name>
+sudo docker ps  #List running containers
+sudo docker start <container_name>  #Start existing container
+sudo docker stop <container_name>  #Stop running container
+sudo docker rm <container_name>  #Remove container
+sudo docker logs <container_name>  #Read logs from container (useful for checking errors)
