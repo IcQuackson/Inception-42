@@ -7,13 +7,12 @@ RUN apt-get update && apt upgrade && apt-get install -y mariadb-server && rm -rf
 # Expose MariaDB port
 EXPOSE 3306
 
-# Copy configurations
-COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/
+COPY tools/config.sh /
 
-COPY tools/create_user.sh /
+RUN chmod 777 /config.sh
 
-RUN chmod 777 /create_user.sh
+RUN mysql_install_db
 
-ENTRYPOINT ["/create_user.sh"]
+ENTRYPOINT ["/config.sh"]
 # Start MariaDB
-CMD ["mysqld"]
+CMD ["mysqld_safe", "--bind-address=0.0.0.0"]

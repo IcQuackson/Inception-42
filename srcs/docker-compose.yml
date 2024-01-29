@@ -6,9 +6,10 @@ services:
     build:
       context: ./requirements/mariadb/
       dockerfile: Dockerfile
+    ports:
+      - 3306
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./requirements/mariadb/conf/mariadb.cnf:/etc/mysql/conf.d/mariadb.cnf
     networks:
       - inception_network
     env_file:
@@ -20,6 +21,8 @@ services:
     build:
       context: ./requirements/wordpress/
       dockerfile: Dockerfile
+    ports:
+      - 9000
     depends_on:
       - mariadb
     volumes:
@@ -36,7 +39,7 @@ services:
       context: ./requirements/nginx/
       dockerfile: Dockerfile
     ports:
-      - "443:443"
+      - 443:443
     volumes:
       - wordpress_data:/var/www/html
     networks:
