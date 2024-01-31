@@ -1,39 +1,22 @@
-version: '3'
+version: '3.7' # TODO: tentar 3.8
 
 services:
   mariadb:
+    image: mariadb
     container_name: mariadb
     build:
       context: ./requirements/mariadb/
       dockerfile: Dockerfile
-    ports:
-      - 3306
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
-      - inception_network
+      - inception
+    restart: "no"
     env_file:
       - .env
-    restart: always
-
-  wordpress:
-    container_name: wordpress
-    build:
-      context: ./requirements/wordpress/
-      dockerfile: Dockerfile
-    ports:
-      - 9000
-    depends_on:
-      - mariadb
-    volumes:
-      - wordpress_data:/var/www/html
-    env_file:
-      - .env
-    networks:
-      - inception_network
-    restart: always
 
   nginx:
+    image: nginx
     container_name: nginx
     build:
       context: ./requirements/nginx/
@@ -43,20 +26,46 @@ services:
     volumes:
       - wordpress_data:/var/www/html
     networks:
-      - inception_network
-    env_file:
-      - .env
+      - inception
     depends_on:
       - wordpress
-    restart: always
+    restart: "no"
+    env_file:
+      - .env
+
+  wordpress:
+    image: wordpress
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress/
+      dockerfile: Dockerfile
+    ports:
+      - 9000
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    restart: "no"
+
 
 networks:
-  inception_network:
-    #driver: bridge
-    name: inception_network
+  inception:
+    name: inception
 
 volumes:
   mariadb_data:
     name: mariadb_data
+    driver_opts:
+      type: none
+      device: /home/pedgonca/data/mysql
+      o: bind
   wordpress_data:
     name: wordpress_data
+    driver_opts:
+      type: none
+      device: /home/pedgonca/data/wordpress
+      o: bind
