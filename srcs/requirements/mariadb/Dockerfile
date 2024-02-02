@@ -13,7 +13,6 @@ COPY ./tools/config.sh /tmp/config.sh
 
 RUN chmod 777 /tmp/config.sh
 
-RUN mysql_install_db
 
 ENTRYPOINT ["/tmp/config.sh"]
 

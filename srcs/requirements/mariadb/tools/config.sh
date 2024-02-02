@@ -5,7 +5,7 @@ if [ -d "/var/lib/mysql/$DB_NAME" ];
 
 then
 	echo "Database already exist"
-	mysqld_safe
+	echo "Database already exist2312"
 
 else
 	service mariadb start
@@ -43,5 +43,6 @@ else
 fi
 
 echo "DONE"
+echo "Starting MariaDB..."
 
 exec "$@"

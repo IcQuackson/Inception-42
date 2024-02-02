@@ -5,7 +5,7 @@ sleep 5
 # if wp-config already exists
 if [ -e "/var/www/html/wp-config.php" ]; then
     echo "WordPress already installed"
-    exit 0
+    exec "$@"
 fi
 
 cd "$WP_PATH"
@@ -35,5 +35,7 @@ wp user create --allow-root \
                 --user_pass="$WP_SECOND_USER_PASSWORD" \
 
 echo "WordPress installed successfully"
+
+chown -R www-data:www-data /var/www/html
 
 exec "$@"
