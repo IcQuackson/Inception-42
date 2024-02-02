@@ -39,8 +39,6 @@ services:
     build:
       context: ./requirements/wordpress/
       dockerfile: Dockerfile
-    ports:
-      - 9000
     volumes:
       - wordpress_data:/var/www/html
     networks:
