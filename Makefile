@@ -2,7 +2,7 @@ COMPOSE_FILE := ./srcs/docker-compose.yml
 HOME := /home/pedgonca
 
 all:
-	@echo "Usage: make [up|down|clean|fclean|delete_folders|images_clean|volume_clean|container_clean|prune|re-up]"
+	@echo "Usage: make [up|down|clean|clean-re|up-volumes|stop|fclean|delete_folders|images_clean|restart|volume_clean|container_clean|prune|connect|re-up]"
 
 build:
 	sudo docker compose -f $(COMPOSE_FILE) build
@@ -23,13 +23,20 @@ down-volumes:
 clean: images_clean
 	sudo docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
 
-fclean: clean delete_folders
+stop:
+	sudo docker compose -f $(COMPOSE_FILE) stop
+
+fclean: delete_folders 
+	sudo docker stop $$(sudo docker ps -qa)  # Stop all containers
+	sudo docker rm $$(sudo docker ps -qa) # Remove all containers
+	sudo docker rmi -f $$(sudo docker images -qa) # Remove all images
+	sudo docker volume rm $$(sudo docker volume ls -q) # Remove all volumes
+	sudo docker network rm $$(sudo docker network ls -q) 2>/dev/null # Remove all networks
 
 delete_folders:
 	sudo rm -rf $(HOME)/data/mysql
 	sudo rm -rf $(HOME)/data/wordpress
 
-#delete all images
 images_clean:
 	sudo docker rmi $$(sudo docker images -q)
 
@@ -44,6 +51,9 @@ container_clean:
 prune:
 	sudo docker system prune -a
 
-re-up: fclean up-build
+connect:
+	sudo docker exec -it mariadb mysql -u root -p
 
-.PHONY: up down clean clean-re
+re-up: down fclean build-up
+
+.PHONY: up down clean clean-re up-volumes stop fclean delete_folders images_clean restart volume_clean container_clean prune connect_mariadb re-up

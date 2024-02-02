@@ -1,4 +1,4 @@
-version: '3.7' # TODO: tentar 3.8
+version: '3.8'
 
 services:
   mariadb:
@@ -11,7 +11,7 @@ services:
       - mariadb_data:/var/lib/mysql
     networks:
       - inception
-    restart: "no"
+    restart: "on-failure"
     env_file:
       - .env
 
@@ -29,7 +29,7 @@ services:
       - inception
     depends_on:
       - wordpress
-    restart: "no"
+    restart: "on-failure"
     env_file:
       - .env
 
@@ -47,7 +47,7 @@ services:
       - mariadb
     env_file:
       - .env
-    restart: "no"
+    restart: "on-failure"
 
 
 networks:

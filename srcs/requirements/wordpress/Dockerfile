@@ -23,9 +23,9 @@ RUN mkdir /run/php/ && chmod 755 /run/php/
 
 # Copy the configuration files
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
-COPY ./conf/config.sh /home
+COPY ./tools/config.sh /home
 RUN chmod 777 /home/config.sh
 
 ENTRYPOINT ["/home/config.sh"]
 
-CMD ["php-fpm7.4", "--nodaemonize", "--force-stderr"]
+CMD ["php-fpm7.4", "-F"]

@@ -1,18 +1,17 @@
 #!/bin/bash
-echo "maria db running"
+
+echo "Configuring MariaDB..."
 
 if [ -d "/var/lib/mysql/$DB_NAME" ];
 
 then
-	echo "Database already exist"
-	echo "Database already exist2312"
+	echo "Database already exists"
 
 else
 	service mariadb start
 
 	sleep 1
 
-	echo "Configuring MariaDB..."
 	mysql_secure_installation <<-END
 
 	Y
@@ -26,23 +25,18 @@ else
 	echo "MariaDB configured"
 	echo "Creating Database..."
 
-	mysql -u root -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
-
-	mysql -u root -e "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD';"
-
-	mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'%';"
-
-	mysql -u root -e "FLUSH PRIVILEGES;"
-
-	mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASSWORD';"
-
-	mysql -u root -p$DB_ROOT_PASSWORD -e "FLUSH PRIVILEGES;"
-
-	mysqladmin -u root -p$DB_ROOT_PASSWORD shutdown
+	mysql -u root <<-EOF
+		CREATE DATABASE IF NOT EXISTS $DB_NAME;
+		CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD';
+		GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'%';
+		FLUSH PRIVILEGES;
+		ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASSWORD';
+		FLUSH PRIVILEGES;
+	EOF
 
 fi
 
-echo "DONE"
+echo "Database created"
 echo "Starting MariaDB..."
 
 exec "$@"
