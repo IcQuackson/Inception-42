@@ -34,6 +34,8 @@ else
 		FLUSH PRIVILEGES;
 	EOF
 
+ 	mysqladmin -u root -p$DB_ROOT_PASSWORD shutdown
+
 fi
 
 echo "Database created"
